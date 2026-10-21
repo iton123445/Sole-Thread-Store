@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sole &amp; Thread | Sneakers &amp; Tees</title>
+  <meta name="description" content="Sole & Thread: sneakers and tees built piece by piece. Design your own custom t-shirt.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Play the intro once per visit
+    try {
+      if (sessionStorage.getItem('st-intro') || matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('no-intro');
+      else sessionStorage.setItem('st-intro', '1');
+    } catch (e) { document.documentElement.classList.add('no-intro'); }
+  </script>
+</head>
+<body>
+
+  <div class="intro" aria-hidden="true">
+    <div class="intro-mark"><span>Sole</span> <em>&amp;</em> <span>Thread</span></div>
+  </div>
+
+  <header class="nav">
+    <a href="#top" class="logo" aria-label="Sole & Thread home">Sole <em>&amp;</em> Thread</a>
+    <nav class="nav-links">
+      <a href="#shop">Shop</a>
+      <a href="#lookbook">Lookbook</a>
+      <a href="#customize">Custom studio</a>
+      <a href="#story">Our approach</a>
+    </nav>
+    <button class="cart-btn" data-open-cart aria-label="Open bag">
+      Bag <span class="count" id="cart-count" hidden>0</span>
+    </button>
+  </header>
+
+  <main id="top">
+    <!-- Shoe showcase: scatter → rejoin → turn around -->
+    <section class="showcase dark" id="shoe-showcase">
+      <div class="stage">
+        <div class="glow"></div>
+        <canvas aria-hidden="true"></canvas>
+        <img class="static-fallback" alt="Featured sneaker">
+        <div class="cap cap-hero" data-in="0" data-out="0.1">
+          <p class="eyebrow" id="shoe-eyebrow"></p>
+          <h1 class="split hero-split">
+            <span class="line"><span>Built piece</span></span>
+            <span class="line"><span><em>by piece.</em></span></span>
+          </h1>
+        </div>
+        <div class="cap cap-side" data-in="0.14" data-out="0.38">
+          <span class="num">01 / 03</span>
+          <h2>Deconstructed</h2>
+          <p>Forty-two components, each one engineered on its own before it earns a place in the shoe.</p>
+        </div>
+        <div class="cap cap-side right" data-in="0.42" data-out="0.64">
+          <span class="num">02 / 03</span>
+          <h2>Reassembled</h2>
+          <p>Bonded, stitched and pressed by hand into a single featherweight form.</p>
+        </div>
+        <div class="cap cap-bottom" data-in="0.7" data-out="1.01">
+          <span class="num">03 / 03</span>
+          <h2>Every angle, <em>considered</em></h2>
+          <a class="btn" id="shoe-cta" href="#shop"></a>
+        </div>
+        <div class="scroll-cue" data-in="0" data-out="0.05" aria-hidden="true"><span></span>Scroll</div>
+        <div class="progress" aria-hidden="true"><span></span></div>
+      </div>
+    </section>
+
+    <!-- Statement -->
+    <section class="section statement" id="story">
+      <p class="eyebrow reveal">Our approach</p>
+      <p class="statement-text reveal">
+        We make fewer things, and we make them better. <span>Every pair is resoleable, every tee is heavyweight organic cotton, and nothing is designed to last a single season.</span>
+      </p>
+      <dl class="stats">
+        <div class="reveal"><dt>42</dt><dd>components in every pair</dd></div>
+        <div class="reveal"><dt>240<small>gsm</small></dt><dd>organic cotton jersey</dd></div>
+        <div class="reveal"><dt>30<small>days</small></dt><dd>to wear them, then decide</dd></div>
+      </dl>
+    </section>
+
+    <!-- Tee showcase -->
+    <section class="showcase dark" id="tee-showcase">
+      <div class="stage">
+        <div class="glow cool"></div>
+        <canvas aria-hidden="true"></canvas>
+        <img class="static-fallback" alt="Featured t-shirt">
+        <div class="cap cap-hero" data-in="0" data-out="0.1">
+          <p class="eyebrow" id="tee-eyebrow"></p>
+          <h2 class="display">Threads that<br><em>hold together.</em></h2>
+        </div>
+        <div class="cap cap-side" data-in="0.14" data-out="0.38">
+          <span class="num">01 / 03</span>
+          <h2>Heavyweight jersey</h2>
+          <p>240gsm organic cotton: thick enough to hold its shape, soft enough to sleep in.</p>
+        </div>
+        <div class="cap cap-side right" data-in="0.42" data-out="0.64">
+          <span class="num">02 / 03</span>
+          <h2>Printed to last</h2>
+          <p>Water-based inks pressed into the fibre, so they won't crack, peel or fade.</p>
+        </div>
+        <div class="cap cap-bottom" data-in="0.7" data-out="1.01">
+          <span class="num">03 / 03</span>
+          <h2>Front <em>and</em> back</h2>
+          <div class="cta-row">
+            <a class="btn" id="tee-cta" href="#shop"></a>
+            <a href="#customize" class="btn btn-ghost">Design your own</a>
+          </div>
+        </div>
+        <div class="progress" aria-hidden="true"><span></span></div>
+      </div>
+    </section>
+
+    <!-- Shop -->
+    <section class="section" id="shop">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow reveal">The collection</p>
+          <h2 class="display split reveal"><span class="line"><span>The lineup</span></span></h2>
+        </div>
+        <div class="filters" role="tablist" aria-label="Filter products">
+          <button class="active" data-filter="all">All</button>
+          <button data-filter="shoe">Sneakers</button>
+          <button data-filter="tee">Tees</button>
+        </div>
+      </div>
+      <div class="grid" id="product-grid"></div>
+    </section>
+
+    <!-- Lookbook -->
+    <section class="section lookbook" id="lookbook">
+      <div class="lb-media reveal">
+        <div class="lb-panel">
+          <div class="lb-tee" id="lb-tee"></div>
+          <div class="lb-shoe" id="lb-shoe"></div>
+          <span class="lb-caption">Drop 01 · Lookbook</span>
+          <span class="lb-caption right" id="lb-names"></span>
+        </div>
+      </div>
+      <div class="lb-copy">
+        <p class="eyebrow reveal">Lookbook</p>
+        <h2 class="display split reveal">
+          <span class="line"><span>Made for the</span></span>
+          <span class="line"><span><em>long way home.</em></span></span>
+        </h2>
+        <p class="muted reveal">Drop 01 is built around one idea: the things you wear every day should get better with age. Soft where it touches, tough where it counts, and quiet enough to go with everything.</p>
+        <ol class="lb-list reveal">
+          <li><span>01</span>Resoleable cupsole construction</li>
+          <li><span>02</span>Garment-dyed organic cotton</li>
+          <li><span>03</span>Printed and finished on demand</li>
+        </ol>
+        <a href="#shop" class="text-link reveal">Explore the drop <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+
+    <!-- Customizer -->
+    <section class="section" id="customize">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow reveal">Custom studio</p>
+          <h2 class="display split reveal"><span class="line"><span>Make it <em>yours</em></span></span></h2>
+          <p class="muted reveal">Choose a color, then add a layout, your own artwork or a few words. Drag anything to place it.</p>
+        </div>
+      </div>
+
+      <div class="studio">
+        <div class="studio-preview">
+          <div class="side-toggle">
+            <button data-side="front" class="active">Front <span class="badge" id="cz-count-front"></span></button>
+            <button data-side="back">Back <span class="badge" id="cz-count-back"></span></button>
+          </div>
+          <div class="cz-stage" id="cz-stage">
+            <div id="cz-preview" tabindex="0" aria-label="T-shirt preview. Drag designs to move them, arrow keys to nudge."></div>
+          </div>
+          <div class="layer-panel" id="cz-layer-panel" hidden>
+            <div class="layer-head">
+              <strong id="cz-layer-name">Layer</strong>
+              <div>
+                <button class="link" id="cz-center">Center</button>
+                <button class="link danger" id="cz-delete">Delete</button>
+              </div>
+            </div>
+            <label>Size <input type="range" id="cz-scale" min="0.3" max="1.8" step="0.01"></label>
+            <label>Rotate <input type="range" id="cz-rot" min="-180" max="180" step="1"></label>
+          </div>
+        </div>
+
+        <div class="studio-controls">
+          <div class="control">
+            <span class="field-label"><b>01</b> Color</span>
+            <div class="swatches" id="cz-colors"></div>
+            <label class="custom-color">Custom <input type="color" id="cz-color-input" value="#ffffff"></label>
+          </div>
+
+          <div class="control">
+            <span class="field-label"><b>02</b> Design</span>
+            <div class="tabs">
+              <button data-tab="layouts" class="active">Layouts</button>
+              <button data-tab="upload">Upload</button>
+              <button data-tab="text">Text</button>
+            </div>
+            <div data-panel="layouts">
+              <div class="layouts" id="cz-layouts"></div>
+            </div>
+            <div data-panel="upload" hidden>
+              <label class="drop" id="cz-drop">
+                <input type="file" id="cz-upload" accept="image/*" hidden>
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>
+                <strong>Drop an image, or click to upload</strong>
+                <span class="muted">A PNG with a transparent background looks best</span>
+              </label>
+            </div>
+            <div data-panel="text" hidden>
+              <div class="text-row">
+                <input type="text" id="cz-text" maxlength="24" placeholder="Your text">
+                <input type="color" id="cz-text-color" value="#9a3412" aria-label="Text color">
+              </div>
+              <div class="text-row">
+                <select id="cz-font" aria-label="Font">
+                  <option value="Arial Black, Impact, sans-serif">Heavy</option>
+                  <option value="Instrument Serif, Georgia, serif">Editorial</option>
+                  <option value="Georgia, serif">Serif</option>
+                  <option value="Courier New, monospace">Mono</option>
+                  <option value="Brush Script MT, cursive">Script</option>
+                </select>
+                <button class="btn btn-small" id="cz-add-text">Add text</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="control">
+            <span class="field-label"><b>03</b> Size &amp; quantity</span>
+            <div class="chips" id="cz-sizes"></div>
+            <div class="qty big" id="cz-qty-wrap"><button data-d="-1" aria-label="Decrease">−</button><span id="cz-qty">1</span><button data-d="1" aria-label="Increase">+</button></div>
+          </div>
+
+          <div class="summary">
+            <div>
+              <span class="price big" id="cz-price">$26.00</span>
+              <span class="muted small" id="cz-price-note"></span>
+            </div>
+            <button class="btn" id="cz-add">Add to bag</button>
+          </div>
+          <div class="summary-links">
+            <button class="link" id="cz-download">Download mockup</button>
+            <button class="link" id="cz-reset">Clear design</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values -->
+    <section class="section values">
+      <div class="features">
+        <div class="feature reveal">
+          <svg class="f-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22c4 0 6-2 9-2s5 3 10 3c3 0 5-1 5-3v-2H4z"/><path d="M4 18V12c3 0 5-4 7-6l4 6c3 1 9 3 13 6"/><path d="M9 14l2 2M13 12l2 2"/></svg>
+          <h3>Made to last</h3>
+          <p class="muted">Every pair can be resoled and every tee is heavyweight. Buy less, wear it more.</p>
+        </div>
+        <div class="feature reveal">
+          <svg class="f-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12a10 10 0 1 1-1 7"/><path d="M5 6v6h6"/></svg>
+          <h3>Thirty-day returns</h3>
+          <p class="muted">Wear them around the house. If they're not right, send them back for free.</p>
+        </div>
+        <div class="feature reveal">
+          <svg class="f-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4c5 6 8 10 8 14a8 8 0 0 1-16 0c0-4 3-8 8-14z"/><path d="M12 19a4 4 0 0 0 4 4"/></svg>
+          <h3>Printed on demand</h3>
+          <p class="muted">Custom tees are printed when you order them, so nothing goes to waste.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer dark">
+    <div class="footer-top">
+      <div class="footer-cols">
+        <div>
+          <span class="field-label">Explore</span>
+          <a href="#shop">Shop</a>
+          <a href="#lookbook">Lookbook</a>
+          <a href="#customize">Custom studio</a>
+          <a href="#story">Our approach</a>
+        </div>
+        <div>
+          <span class="field-label">Studio</span>
+          <a href="admin.html">Admin</a>
+          <a href="#top">Back to top ↑</a>
+        </div>
+      </div>
+      <p class="muted footer-note">A portfolio demo store. No real orders or payments are taken. Shoe images: <a class="link" href="https://www.vecteezy.com/free-png/running-shoe" target="_blank" rel="noopener">Vecteezy</a>.</p>
+    </div>
+    <div class="wordmark" aria-hidden="true">Sole <em>&amp;</em> Thread</div>
+    <div class="footer-bottom muted small">
+      <span>© <span id="year"></span> Sole &amp; Thread</span>
+      <span>Designed &amp; built piece by piece</span>
+    </div>
+  </footer>
+
+  <!-- Cart drawer -->
+  <div class="drawer" id="cart" aria-label="Shopping bag">
+    <div class="drawer-backdrop" data-close-cart></div>
+    <div class="drawer-panel">
+      <div class="drawer-head">
+        <h2>Your bag</h2>
+        <button class="icon-btn" data-close-cart aria-label="Close bag">✕</button>
+      </div>
+      <div class="drawer-items" id="cart-items" data-lenis-prevent></div>
+      <div class="drawer-foot">
+        <div class="row"><span>Subtotal</span><strong id="cart-subtotal">$0.00</strong></div>
+        <p class="muted small">Shipping &amp; taxes calculated at checkout.</p>
+        <button class="btn full" id="checkout-btn">Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick view -->
+  <div class="modal" id="quickview" role="dialog" aria-modal="true" aria-label="Product details">
+    <div class="modal-card wide" data-lenis-prevent>
+      <button class="icon-btn modal-close" aria-label="Close">✕</button>
+      <div class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Demo checkout -->
+  <div class="modal" id="checkout" role="dialog" aria-modal="true" aria-label="Checkout">
+    <div class="modal-card" data-lenis-prevent>
+      <button class="icon-btn modal-close" aria-label="Close">✕</button>
+      <form id="checkout-form" class="checkout">
+        <h2>Checkout</h2>
+        <p class="notice">Demo store: no payment is taken and no data leaves your browser.</p>
+        <label>Full name <input name="name" required autocomplete="off"></label>
+        <label>Email <input name="email" type="email" required autocomplete="off"></label>
+        <label>Address <input name="address" required autocomplete="off"></label>
+        <div class="row"><span>Total</span><strong id="checkout-total">$0.00</strong></div>
+        <button class="btn full" type="submit">Place demo order</button>
+      </form>
+      <div id="checkout-done" class="done" hidden>
+        <div class="check">✓</div>
+        <h2>Thank you, <span id="order-name"></span>.</h2>
+        <p class="muted">Order <strong id="order-id"></strong> is confirmed. (Not really, this is a demo.)</p>
+        <button class="btn modal-close">Keep shopping</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/layouts.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/shop.js"></script>
+  <script src="js/customizer.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

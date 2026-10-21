@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product | Sole &amp; Thread</title>
+  <meta name="description" content="Sneakers and tees built piece by piece.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="pdp-page intro-done">
+
+  <header class="nav">
+    <a href="index.html" class="logo" aria-label="Sole & Thread home">Sole <em>&amp;</em> Thread</a>
+    <nav class="nav-links">
+      <a href="index.html#shop">Shop</a>
+      <a href="index.html#lookbook">Lookbook</a>
+      <a href="index.html#customize">Custom studio</a>
+      <a href="index.html#story">Our approach</a>
+    </nav>
+    <button class="cart-btn" data-open-cart aria-label="Open bag">
+      Bag <span class="count" id="cart-count" hidden>0</span>
+    </button>
+  </header>
+
+  <main class="pdp" id="pdp"></main>
+
+  <footer class="footer dark">
+    <div class="footer-top">
+      <div class="footer-cols">
+        <div>
+          <span class="field-label">Explore</span>
+          <a href="index.html#shop">Shop</a>
+          <a href="index.html#lookbook">Lookbook</a>
+          <a href="index.html#customize">Custom studio</a>
+          <a href="index.html#story">Our approach</a>
+        </div>
+        <div>
+          <span class="field-label">Studio</span>
+          <a href="admin.html">Admin</a>
+          <a href="#top">Back to top ↑</a>
+        </div>
+      </div>
+      <p class="muted footer-note">A portfolio demo store. No real orders or payments are taken. Shoe images: <a class="link" href="https://www.vecteezy.com/free-png/running-shoe" target="_blank" rel="noopener">Vecteezy</a>.</p>
+    </div>
+    <div class="wordmark" aria-hidden="true">Sole <em>&amp;</em> Thread</div>
+    <div class="footer-bottom muted small">
+      <span>© <span id="year"></span> Sole &amp; Thread</span>
+      <span>Designed &amp; built piece by piece</span>
+    </div>
+  </footer>
+
+  <!-- Cart drawer -->
+  <div class="drawer" id="cart" aria-label="Shopping bag">
+    <div class="drawer-backdrop" data-close-cart></div>
+    <div class="drawer-panel">
+      <div class="drawer-head">
+        <h2>Your bag</h2>
+        <button class="icon-btn" data-close-cart aria-label="Close bag">✕</button>
+      </div>
+      <div class="drawer-items" id="cart-items" data-lenis-prevent></div>
+      <div class="drawer-foot">
+        <div class="row"><span>Subtotal</span><strong id="cart-subtotal">$0.00</strong></div>
+        <p class="muted small">Shipping &amp; taxes calculated at checkout.</p>
+        <button class="btn full" id="checkout-btn">Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Size guide -->
+  <div class="modal" id="size-guide" role="dialog" aria-modal="true" aria-label="Size guide">
+    <div class="modal-card" data-lenis-prevent>
+      <button class="icon-btn modal-close" aria-label="Close">✕</button>
+      <div class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Demo checkout -->
+  <div class="modal" id="checkout" role="dialog" aria-modal="true" aria-label="Checkout">
+    <div class="modal-card" data-lenis-prevent>
+      <button class="icon-btn modal-close" aria-label="Close">✕</button>
+      <form id="checkout-form" class="checkout">
+        <h2>Checkout</h2>
+        <p class="notice">Demo store: no payment is taken and no data leaves your browser.</p>
+        <label>Full name <input name="name" required autocomplete="off"></label>
+        <label>Email <input name="email" type="email" required autocomplete="off"></label>
+        <label>Address <input name="address" required autocomplete="off"></label>
+        <div class="row"><span>Total</span><strong id="checkout-total">$0.00</strong></div>
+        <button class="btn full" type="submit">Place demo order</button>
+      </form>
+      <div id="checkout-done" class="done" hidden>
+        <div class="check">✓</div>
+        <h2>Thank you, <span id="order-name"></span>.</h2>
+        <p class="muted">Order <strong id="order-id"></strong> is confirmed. (Not really, this is a demo.)</p>
+        <button class="btn modal-close">Keep shopping</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/layouts.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/product.js"></script>
+</body>
+</html>

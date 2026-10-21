@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin | Sole &amp; Thread</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="admin-page">
+
+  <header class="nav scrolled">
+    <a href="index.html" class="logo">Sole <em>&amp;</em> Thread <span class="admin-pill">Admin</span></a>
+    <a href="index.html" class="cart-btn" target="_blank" rel="noopener">View store ↗</a>
+  </header>
+
+  <main class="admin">
+    <div class="admin-top">
+      <div>
+        <h1 class="display">Products</h1>
+        <p class="muted small" id="catalog-status"></p>
+      </div>
+      <div class="admin-actions">
+        <button class="btn btn-small" data-new="shoe">+ New shoe</button>
+        <button class="btn btn-small" data-new="tee">+ New tee</button>
+        <button class="btn btn-small btn-ghost" id="export-btn">Export catalog.js</button>
+        <button class="btn btn-small btn-ghost" id="reset-btn">Reset to defaults</button>
+      </div>
+    </div>
+
+    <p class="notice">
+      Demo admin with no login. Changes are saved in this browser and show up on the store straight away.
+      To make them permanent for everyone, click <strong>Export catalog.js</strong> and replace <code>js/catalog.js</code> with the downloaded file.
+    </p>
+
+    <div class="admin-layout">
+      <section class="admin-list" aria-label="Product list">
+        <div class="list-filters filters">
+          <button class="active" data-filter="all">All</button>
+          <button data-filter="shoe">Shoes</button>
+          <button data-filter="tee">Tees</button>
+        </div>
+        <div id="product-rows"></div>
+      </section>
+
+      <section class="editor" aria-label="Product editor">
+        <div class="editor-empty" id="editor-empty">
+          <p class="muted">Select a product to edit, or create a new one.</p>
+        </div>
+
+        <form id="editor-form" hidden novalidate>
+          <div class="editor-head">
+            <h2 id="editor-title">New shoe</h2>
+            <span class="muted small" id="editor-id"></span>
+          </div>
+
+          <div class="preview-pair">
+            <figure><div id="pv-front"></div><figcaption>Front</figcaption></figure>
+            <figure><div id="pv-back"></div><figcaption>Back</figcaption></figure>
+          </div>
+
+          <div class="form-grid">
+            <label class="span-2">Name
+              <input name="name" maxlength="40" required placeholder="e.g. Aero Runner 2">
+            </label>
+            <label>Price ($)
+              <input name="price" type="number" min="1" step="1" required>
+            </label>
+            <label>Badge
+              <select name="tag">
+                <option value="">None</option>
+                <option>New</option>
+                <option>Best seller</option>
+                <option>Limited</option>
+                <option>Sale</option>
+              </select>
+            </label>
+            <label class="span-2">Description
+              <textarea name="desc" rows="3" maxlength="320" placeholder="Two or three sentences: what it's for and what makes it special"></textarea>
+            </label>
+            <label class="span-2">Details <span class="muted small">(one per line, shown on the product page)</span>
+              <textarea name="details" rows="4" maxlength="600" placeholder="e.g. Weight 236 g (US 9)&#10;8 mm heel-to-toe drop"></textarea>
+            </label>
+          </div>
+
+          <fieldset class="type-fields" data-for="shoe">
+            <legend>Photo <span class="muted">(optional)</span></legend>
+            <div class="photo-tool">
+              <label class="drop photo-drop" id="photo-drop">
+                <input type="file" id="photo-input" accept="image/png,image/jpeg,image/webp" hidden>
+                <strong>Upload a product photo</strong>
+                <span class="muted">Side or angled shot. The background is removed automatically</span>
+              </label>
+              <div class="photo-result" id="photo-result" hidden>
+                <div class="photo-compare">
+                  <figure><img id="photo-original" alt="Original upload"><figcaption>Original</figcaption></figure>
+                  <figure class="checker"><img id="photo-cutout" alt="Background removed"><figcaption>Cut-out</figcaption></figure>
+                </div>
+                <label class="toggle-row"><input type="checkbox" id="photo-remove" checked> Remove background</label>
+                <label class="range-row">Strength <input type="range" id="photo-strength" min="0" max="100" value="25"></label>
+                <div class="photo-actions">
+                  <button type="button" class="link" id="photo-replace">Replace photo</button>
+                  <button type="button" class="link danger" id="photo-clear">Remove photo</button>
+                </div>
+              </div>
+              <p class="muted small" id="photo-status" role="status"></p>
+            </div>
+          </fieldset>
+
+          <fieldset class="type-fields" data-for="shoe" id="colorway-fields">
+            <legend>Colorway</legend>
+            <p class="muted small colorway-note">Not used while a photo is set.</p>
+            <div class="color-grid">
+              <label><input type="color" name="upper"> Upper</label>
+              <label><input type="color" name="accent"> Accent</label>
+              <label><input type="color" name="sole"> Sole</label>
+              <label><input type="color" name="lace"> Laces</label>
+            </div>
+          </fieldset>
+
+          <fieldset class="type-fields" data-for="tee">
+            <legend>Shirt</legend>
+            <label class="inline-color"><input type="color" name="color"> Shirt color</label>
+            <span class="field-label">Print</span>
+            <div class="layout-pick" id="layout-pick"></div>
+          </fieldset>
+
+          <label class="hero-toggle">
+            <input type="checkbox" name="featured">
+            <span>
+              <strong>Feature in homepage hero</strong>
+              <span class="muted small" id="hero-note"></span>
+            </span>
+          </label>
+
+          <p class="form-error" id="form-error" role="alert"></p>
+
+          <div class="editor-actions">
+            <button class="btn" type="submit">Save product</button>
+            <button class="btn btn-ghost" type="button" id="cancel-btn">Cancel</button>
+            <button class="link danger" type="button" id="delete-btn">Delete</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/art.js"></script>
+  <script src="js/layouts.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/bg-remove.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

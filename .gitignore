@@ -1,0 +1,10 @@
+# Original full-size downloads (large, and the stock license doesn't allow redistributing the raw files).
+# The site uses the resized copies in images/.
+images/source/
+
+# OS / editor clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+node_modules/
