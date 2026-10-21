@@ -1,11 +1,41 @@
-/* Demo admin: add / edit / delete products, set badges and the homepage hero.
-   The catalog is saved to localStorage (read by data.js on the store) and can
-   be exported as a replacement js/catalog.js. */
-(() => {
+/* Admin: add / edit / delete products, set badges and the homepage hero.
+   With Supabase configured, only the admin account gets in, and changes are
+   saved to the database (the database rules enforce admin-only writes).
+   Without it (demo mode), the catalog is saved to this browser's localStorage
+   and can be exported as a replacement js/catalog.js. */
+CatalogReady.then(async () => {
   const $ = s => document.querySelector(s);
   const form = $('#editor-form');
   const F = form.elements;
   const clone = o => JSON.parse(JSON.stringify(o));
+  const remote = Backend.enabled;
+
+  /* ---------- access ---------- */
+  const signOut = () => Backend.signOut().then(() => location.reload());
+  if (remote) {
+    const user = await Backend.ready;
+    const admin = user && await Backend.isAdmin();
+    if (!admin) {
+      $('#admin-loading').hidden = true;
+      $('#admin-gate').hidden = false;
+      if (user) {
+        $('#gate-title').innerHTML = 'Not an <em>admin.</em>';
+        $('#gate-text').textContent = `You're signed in as ${user.email}, which doesn't have admin access.`;
+        $('#gate-signin').hidden = true;
+        $('#gate-signout').hidden = false;
+        $('#gate-signout').addEventListener('click', signOut);
+      }
+      return;
+    }
+    $('#admin-signout').hidden = false;
+    $('#admin-signout').addEventListener('click', signOut);
+    Backend.onAuth(u => { if (!u) location.reload(); });
+    $('#admin-notice').innerHTML = `Signed in as <strong>${user.email}</strong>. Changes save to the database and are live for every visitor straight away.`;
+    $('#reset-btn').hidden = true;
+    $('#import-btn').hidden = false;
+  }
+  $('#admin-loading').hidden = true;
+  $('#admin-app').hidden = false;
 
   let products = clone(PRODUCTS);
   let filter = 'all';
@@ -31,20 +61,44 @@
     try { return !!localStorage.getItem(CATALOG_KEY); } catch (e) { return false; }
   }
 
-  function persist() {
+  // The database starts empty: the built-in products must be imported before editing
+  let dbEmpty = remote && CATALOG_SOURCE !== 'database';
+
+  /* Save changes. Demo mode writes the whole catalog to localStorage;
+     with the database, `save` products are upserted (photos uploaded first)
+     and `remove` is deleted. Resolves true on success. */
+  async function persist({ save = [], remove = null } = {}) {
+    if (!remote) {
+      try { localStorage.setItem(CATALOG_KEY, JSON.stringify(products)); }
+      catch (e) { toast('Could not save: browser storage is blocked'); return false; }
+      renderStatus();
+      return true;
+    }
+    if (dbEmpty) { toast('Import the built-in products first'); return false; }
     try {
-      localStorage.setItem(CATALOG_KEY, JSON.stringify(products));
+      for (const p of save) {
+        if (p.image && p.image.startsWith('data:')) {
+          toast('Uploading photo…');
+          p.image = await Backend.uploadImage(p.image, p.id);
+        }
+        await Backend.saveProduct(p);
+      }
+      if (remove) await Backend.deleteProduct(remove);
+      renderStatus();
+      return true;
     } catch (e) {
-      toast('Could not save: browser storage is blocked');
+      toast('Could not save: ' + e.message);
+      products = await Backend.listProducts().catch(() => products); // back in sync with the database
+      renderList();
       return false;
     }
-    renderStatus();
-    return true;
   }
 
   function renderStatus() {
-    $('#catalog-status').textContent = `${products.length} products · ` +
-      (hasSaved() ? 'using changes saved in this browser' : 'using the built-in catalog');
+    $('#catalog-status').textContent = `${products.length} products · ` + (
+      remote ? (dbEmpty ? 'the database is empty, so the store shows the built-in products. Import them to start editing' : 'live from the database')
+        : hasSaved() ? 'using changes saved in this browser' : 'using the built-in catalog');
+    if (remote) $('#import-btn').classList.toggle('btn-ghost', !dbEmpty);
   }
 
   const heroOf = type => products.find(p => p.type === type && p.featured);
@@ -78,11 +132,15 @@
   $('#product-rows').addEventListener('click', e => {
     const h = e.target.closest('[data-hero]');
     if (h) {
-      setHero(h.dataset.hero);
-      persist();
-      renderList();
-      if (editingId) openEditor(editingId);
-      toast(`${products.find(p => p.id === h.dataset.hero).name} is now the hero`);
+      const hero = products.find(p => p.id === h.dataset.hero);
+      const previous = heroOf(hero.type);
+      setHero(hero.id);
+      persist({ save: [hero] }).then(ok => {
+        if (!ok) { if (previous) setHero(previous.id); else delete hero.featured; }
+        renderList();
+        if (editingId) openEditor(editingId);
+        if (ok) toast(`${hero.name} is now the hero`);
+      });
       return;
     }
     const r = e.target.closest('[data-edit]');
@@ -246,7 +304,7 @@
     return id;
   }
 
-  form.addEventListener('submit', e => {
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     const p = readForm();
     if (!p.name) { $('#form-error').textContent = 'Please give the product a name.'; F.name.focus(); return; }
@@ -261,12 +319,17 @@
       products[i] = saved;
     } else {
       saved = { id: slugify(p.name, p.type), ...p };
-      products.unshift(saved); // newest first so it leads the shop grid
+      saved.sort = Math.min(0, ...products.map(x => x.sort ?? 0)) - 1; // newest first in the shop grid
+      products.unshift(saved);
     }
     if (F.featured.checked) setHero(saved.id);
     else delete saved.featured;
 
-    if (!persist()) return;
+    const submit = form.querySelector('[type=submit]');
+    submit.disabled = true;
+    const ok = await persist({ save: [saved] });
+    submit.disabled = false;
+    if (!ok) return;
     toast(`Saved ${saved.name}${F.featured.checked ? ' as the hero' : ''}`);
     openEditor(saved.id);
   });
@@ -279,11 +342,11 @@
   }
   $('#cancel-btn').addEventListener('click', closeEditor);
 
-  $('#delete-btn').addEventListener('click', () => {
+  $('#delete-btn').addEventListener('click', async () => {
     const p = products.find(x => x.id === editingId);
-    if (!p || !confirm(`Delete "${p.name}"? This removes it from the store in this browser.`)) return;
+    if (!p || !confirm(`Delete "${p.name}"? This removes it from the store${remote ? ' for everyone' : ' in this browser'}.`)) return;
     products = products.filter(x => x.id !== editingId);
-    persist();
+    if (!await persist({ remove: p.id })) return;
     toast(`Deleted ${p.name}`);
     closeEditor();
   });
@@ -298,6 +361,44 @@
     renderStatus();
     toast('Back to the built-in catalog');
   });
+
+  $('#import-btn').addEventListener('click', async () => {
+    const msg = dbEmpty
+      ? `Copy the ${DEFAULT_PRODUCTS.length} built-in products into the database so you can edit them?`
+      : `Add back the ${DEFAULT_PRODUCTS.length} built-in products, overwriting any with the same id? Your other products are kept.`;
+    if (!confirm(msg)) return;
+    try {
+      const defaults = clone(DEFAULT_PRODUCTS).map((p, i) => ({ ...p, sort: i }));
+      // keep the current heroes when re-importing into a database that already has products
+      if (!dbEmpty) defaults.forEach(p => { const hero = heroOf(p.type); if (hero) p.featured = hero.id === p.id; });
+      await Backend.saveProducts(defaults);
+      products = await Backend.listProducts();
+      dbEmpty = false;
+      closeEditor();
+      renderStatus();
+      toast('Built-in products imported');
+    } catch (e) {
+      toast('Import failed: ' + e.message);
+    }
+  });
+
+  async function loadOrders() {
+    $('#orders-panel').hidden = false;
+    const rows = $('#orders-rows');
+    try {
+      const orders = await Backend.listOrders(200);
+      rows.innerHTML = orders.length ? orders.map(o => `
+        <tr>
+          <td>#ST${String(o.id).padStart(6, '0')}</td>
+          <td>${new Date(o.created_at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}</td>
+          <td>${esc((o.shipping && o.shipping.name) || '')}<br><span class="muted small">${esc(o.email)}</span></td>
+          <td>${o.items.map(i => `${esc(i.name)} <span class="muted">(${esc(i.size)} ×${+i.qty})</span>`).join('<br>')}</td>
+          <td>${money(+o.total)}</td>
+        </tr>`).join('') : '<tr><td colspan="5" class="muted">No orders yet.</td></tr>';
+    } catch (e) {
+      rows.innerHTML = `<tr><td colspan="5" class="muted">Couldn't load orders: ${esc(e.message)}</td></tr>`;
+    }
+  }
 
   $('#export-btn').addEventListener('click', () => {
     const header = `/* Built-in product catalog, exported from admin.html on ${new Date().toISOString().slice(0, 10)}.
@@ -316,4 +417,5 @@
 
   renderStatus();
   renderList();
-})();
+  if (remote) loadOrders();
+});

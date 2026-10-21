@@ -1,6 +1,6 @@
 /* Home page: particle showcases, lookbook art, intro, and deep links
    into the custom studio (index.html?customize=<tee id>#customize) */
-(() => {
+CatalogReady.then(() => {
   const $ = s => document.querySelector(s);
 
   /* ---------- Featured products → showcases + lookbook ---------- */
@@ -52,4 +52,4 @@
     Customizer.load({ color: presetTee.color, layout: presetTee.layout });
     setTimeout(() => Site.scrollTo($('#customize')), 200);
   }
-})();
+});

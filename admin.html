@@ -15,10 +15,28 @@
 
   <header class="nav scrolled">
     <a href="index.html" class="logo">Sole <em>&amp;</em> Thread <span class="admin-pill">Admin</span></a>
-    <a href="index.html" class="cart-btn" target="_blank" rel="noopener">View store ↗</a>
+    <div class="nav-actions">
+      <button class="cart-btn" id="admin-signout" hidden>Sign out</button>
+      <a href="index.html" class="cart-btn" target="_blank" rel="noopener">View store ↗</a>
+    </div>
   </header>
 
   <main class="admin">
+    <p class="muted" id="admin-loading">Checking access…</p>
+
+    <!-- Shown when the visitor isn't signed in as the admin -->
+    <section class="admin-gate" id="admin-gate" hidden>
+      <p class="eyebrow">Admin</p>
+      <h1 class="display" id="gate-title">Sign in <em>required.</em></h1>
+      <p class="muted" id="gate-text">This area is for the store owner only.</p>
+      <div class="actions">
+        <a class="btn" id="gate-signin" href="account.html?next=admin.html">Sign in</a>
+        <button class="btn btn-ghost" id="gate-signout" hidden>Sign out</button>
+        <a class="btn btn-ghost" href="index.html">Back to the store</a>
+      </div>
+    </section>
+
+    <div id="admin-app" hidden>
     <div class="admin-top">
       <div>
         <h1 class="display">Products</h1>
@@ -29,10 +47,11 @@
         <button class="btn btn-small" data-new="tee">+ New tee</button>
         <button class="btn btn-small btn-ghost" id="export-btn">Export catalog.js</button>
         <button class="btn btn-small btn-ghost" id="reset-btn">Reset to defaults</button>
+        <button class="btn btn-small btn-ghost" id="import-btn" hidden>Import built-in products</button>
       </div>
     </div>
 
-    <p class="notice">
+    <p class="notice" id="admin-notice">
       Demo admin with no login. Changes are saved in this browser and show up on the store straight away.
       To make them permanent for everyone, click <strong>Export catalog.js</strong> and replace <code>js/catalog.js</code> with the downloaded file.
     </p>
@@ -147,10 +166,21 @@
         </form>
       </section>
     </div>
+    <section class="orders-panel" id="orders-panel" hidden>
+      <h2>Orders</h2>
+      <div class="orders-wrap"><table class="orders-table">
+        <thead><tr><th>Order</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th></tr></thead>
+        <tbody id="orders-rows"></tbody>
+      </table></div>
+    </section>
+    </div>
   </main>
 
   <div class="toast" role="status" aria-live="polite"></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/backend.js"></script>
   <script src="js/art.js"></script>
   <script src="js/layouts.js"></script>
   <script src="js/catalog.js"></script>

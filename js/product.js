@@ -1,5 +1,5 @@
 /* Product page: product.html?id=<product id> */
-(() => {
+CatalogReady.then(() => {
   const $ = s => document.querySelector(s);
   const root = $('#pdp');
   const id = new URLSearchParams(location.search).get('id');
@@ -194,4 +194,4 @@
   });
 
   Site.observeReveals(root);
-})();
+});

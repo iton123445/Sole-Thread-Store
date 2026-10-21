@@ -1,14 +1,28 @@
 /* Store data helpers.
-   PRODUCTS comes from the admin page's saved catalog (localStorage) when
-   there is one, otherwise from DEFAULT_PRODUCTS in catalog.js. */
+   PRODUCTS is filled by CatalogReady, from (in order of preference):
+     1. the Supabase products table, when Supabase is configured
+     2. the admin's saved catalog in this browser (demo mode only)
+     3. DEFAULT_PRODUCTS in catalog.js
+   Pages render their products after `await CatalogReady`. */
 const CATALOG_KEY = 'st-products-v1';
+const PRODUCTS = [];
+let CATALOG_SOURCE = 'built-in';   // 'database' | 'browser' | 'built-in'
 
-const PRODUCTS = (() => {
-  try {
-    const saved = JSON.parse(localStorage.getItem(CATALOG_KEY));
-    if (Array.isArray(saved) && saved.length) return saved;
-  } catch (e) { /* storage blocked or corrupt: use defaults */ }
-  return JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+const CatalogReady = (async () => {
+  let list = null;
+  if ((typeof Backend !== 'undefined' && Backend.enabled)) {
+    try {
+      const rows = await Backend.listProducts();
+      if (rows.length) { list = rows; CATALOG_SOURCE = 'database'; }
+    } catch (e) { console.warn('Could not load products from the database; using the built-in catalog.', e); }
+  } else {
+    try {
+      const saved = JSON.parse(localStorage.getItem(CATALOG_KEY));
+      if (Array.isArray(saved) && saved.length) { list = saved; CATALOG_SOURCE = 'browser'; }
+    } catch (e) { /* storage blocked or corrupt: use defaults */ }
+  }
+  PRODUCTS.push(...(list || JSON.parse(JSON.stringify(DEFAULT_PRODUCTS))));
+  return PRODUCTS;
 })();
 
 const SIZES = {

@@ -15,6 +15,7 @@ npx serve .
 - **Product pages (`product.html?id=…`).** Each product has its own shareable page with a gallery (front, back and two close-ups; drag the image to turn it), a size guide, a details / materials / shipping accordion and related products. "Customize this tee" opens the studio with that tee loaded.
 - **Custom tee studio.** Pick any shirt color, then add premade layouts, uploaded images or text to the front and back. Drag to move, use sliders to resize and rotate, or nudge with the arrow keys. Add the shirt to the bag or download a PNG mockup.
 - **Admin (`admin.html`, linked in the footer).** Add, edit and delete shoes and tees, with a live front/back preview. Shoes can use a **product photo**: upload it and the background is removed in the browser (plain or fake-checkerboard backgrounds, with a strength slider). The cut-out is used in the shop and the particle hero, and the back view is the mirrored photo. Set badges (New, Best seller, Limited, Sale) and choose the **hero** product for each scroll showcase. Changes are saved in the browser. **Export catalog.js** downloads a file to replace `js/catalog.js` so the changes are permanent. This is a demo with no real login.
+- **Accounts & database (Supabase).** Customers can create an account, sign in, reset their password and see their order history (`account.html`). The admin page only opens for the admin email, and product changes, photo uploads and orders are stored in Supabase with database-enforced rules. Without Supabase keys the site runs in demo mode. Setup steps: [SETUP.md](SETUP.md).
 - **Bag & checkout.** The cart drawer is saved in `localStorage`. Checkout is a demo flow and takes no payment.
 
 ## Structure
@@ -25,6 +26,10 @@ npx serve .
 | `js/catalog.js` | Built-in product catalog (replace with the admin export) |
 | `js/data.js` | Loads the catalog (saved admin changes first) plus shared helpers |
 | `js/admin.js` | Admin page |
+| `js/config.js` | Supabase URL and anon key (empty = demo mode) |
+| `js/backend.js` | Supabase wrapper: auth, products, orders, image uploads |
+| `js/account.js` | Account page: sign in / up, password reset, orders |
+| `supabase/schema.sql` | Tables, admin check and security rules |
 | `js/bg-remove.js` | In-browser background removal for product photos |
 | `js/site.js` | Shared page behavior: smooth scroll, header, reveals, magnetic buttons |
 | `js/product.js` | Product page |

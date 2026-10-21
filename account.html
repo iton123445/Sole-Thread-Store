@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Account | Sole &amp; Thread</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="account-page intro-done">
+
+  <header class="nav scrolled">
+    <a href="index.html" class="logo" aria-label="Sole & Thread home">Sole <em>&amp;</em> Thread</a>
+    <nav class="nav-links">
+      <a href="index.html#shop">Shop</a>
+      <a href="index.html#lookbook">Lookbook</a>
+      <a href="index.html#customize">Custom studio</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="cart-btn" href="index.html#shop">Back to shop</a>
+    </div>
+  </header>
+
+  <main class="auth">
+    <aside class="auth-art dark" aria-hidden="true">
+      <p class="eyebrow">Members</p>
+      <p class="auth-quote">Fewer things, <em>made better.</em></p>
+      <p class="muted">Save your orders, check out faster, and be first to hear about new drops.</p>
+    </aside>
+
+    <section class="auth-panel" id="auth-panel" aria-live="polite">
+      <p class="muted" id="auth-loading">Loading…</p>
+
+      <!-- Accounts not configured -->
+      <div class="auth-view" data-view="off" hidden>
+        <p class="eyebrow">Accounts</p>
+        <h1 class="display">Coming <em>soon.</em></h1>
+        <p class="muted">Accounts haven't been switched on for this demo store yet. You can still shop and check out as a guest.</p>
+        <a class="btn" href="index.html#shop">Continue shopping</a>
+      </div>
+
+      <!-- Sign in / create account -->
+      <div class="auth-view" data-view="signed-out" hidden>
+        <div class="tabs auth-tabs" role="tablist">
+          <button class="active" data-auth-tab="signin" role="tab">Sign in</button>
+          <button data-auth-tab="signup" role="tab">Create account</button>
+        </div>
+
+        <form id="signin-form" class="auth-form" data-auth-panel="signin" novalidate>
+          <h1 class="display">Welcome <em>back.</em></h1>
+          <label>Email <input name="email" type="email" autocomplete="email" required></label>
+          <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
+          <p class="form-error" role="alert"></p>
+          <button class="btn full" type="submit">Sign in</button>
+          <button class="link" type="button" data-show="forgot">Forgot your password?</button>
+        </form>
+
+        <form id="signup-form" class="auth-form" data-auth-panel="signup" hidden novalidate>
+          <h1 class="display">Join <em>the club.</em></h1>
+          <label>Name <input name="name" autocomplete="name" maxlength="60" required></label>
+          <label>Email <input name="email" type="email" autocomplete="email" required></label>
+          <label>Password <input name="password" type="password" autocomplete="new-password" minlength="8" required>
+            <span class="hint">At least 8 characters.</span></label>
+          <p class="form-error" role="alert"></p>
+          <button class="btn full" type="submit">Create account</button>
+        </form>
+
+        <form id="forgot-form" class="auth-form" data-auth-panel="forgot" hidden novalidate>
+          <h1 class="display">Reset <em>password.</em></h1>
+          <p class="muted">Enter your email and we'll send you a link to choose a new password.</p>
+          <label>Email <input name="email" type="email" autocomplete="email" required></label>
+          <p class="form-error" role="alert"></p>
+          <button class="btn full" type="submit">Send reset link</button>
+          <button class="link" type="button" data-show="signin">Back to sign in</button>
+        </form>
+      </div>
+
+      <!-- Choose a new password (after following the reset email) -->
+      <div class="auth-view" data-view="recovery" hidden>
+        <form id="recovery-form" class="auth-form" novalidate>
+          <h1 class="display">New <em>password.</em></h1>
+          <label>New password <input name="password" type="password" autocomplete="new-password" minlength="8" required>
+            <span class="hint">At least 8 characters.</span></label>
+          <p class="form-error" role="alert"></p>
+          <button class="btn full" type="submit">Save password</button>
+        </form>
+      </div>
+
+      <!-- Signed in -->
+      <div class="auth-view" data-view="signed-in" hidden>
+        <p class="eyebrow" id="account-eyebrow">Your account</p>
+        <h1 class="display">Hello, <em id="account-name"></em></h1>
+        <p class="muted" id="account-email"></p>
+        <a class="btn" href="admin.html" id="admin-link" hidden>Open admin</a>
+
+        <h2 class="orders-title">Your orders</h2>
+        <div id="orders"></div>
+
+        <button class="link" id="signout-btn">Sign out</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/backend.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/account.js"></script>
+</body>
+</html>

@@ -46,6 +46,7 @@ class ParticleShowcase {
         resolve(c);
       };
       img.onerror = reject;
+      if (typeof svg !== 'string' && /^https?:/.test(svg.src)) img.crossOrigin = 'anonymous'; // e.g. Supabase Storage
       img.src = typeof svg === 'string' ? Art.toDataURL(svg) : svg.src;
     });
   }

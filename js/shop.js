@@ -108,6 +108,6 @@ const Shop = (() => {
     Modal.open(qv);
   }
 
-  render();
+  CatalogReady.then(render);
   return { quickView };
 })();

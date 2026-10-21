@@ -21,9 +21,12 @@
       <a href="index.html#customize">Custom studio</a>
       <a href="index.html#story">Our approach</a>
     </nav>
-    <button class="cart-btn" data-open-cart aria-label="Open bag">
-      Bag <span class="count" id="cart-count" hidden>0</span>
-    </button>
+    <div class="nav-actions">
+      <a class="cart-btn" id="account-link" href="account.html" hidden>Sign in</a>
+      <button class="cart-btn" data-open-cart aria-label="Open bag">
+        Bag <span class="count" id="cart-count" hidden>0</span>
+      </button>
+    </div>
   </header>
 
   <main class="pdp" id="pdp"></main>
@@ -95,6 +98,7 @@
         <div class="check">✓</div>
         <h2>Thank you, <span id="order-name"></span>.</h2>
         <p class="muted">Order <strong id="order-id"></strong> is confirmed. (Not really, this is a demo.)</p>
+        <p class="muted small" id="order-saved" hidden>Saved to your account. See it under <a class="link" href="account.html">Account</a>.</p>
         <button class="btn modal-close">Keep shopping</button>
       </div>
     </div>
@@ -104,6 +108,9 @@
   <div class="grain" aria-hidden="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/backend.js"></script>
   <script src="js/art.js"></script>
   <script src="js/layouts.js"></script>
   <script src="js/catalog.js"></script>

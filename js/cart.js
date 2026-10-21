@@ -82,25 +82,67 @@ const Cart = (() => {
     if (e.target.closest('[data-close-cart]')) close();
   });
 
-  /* ---- demo checkout ---- */
+  /* ---- demo checkout (saved to the account when signed in) ---- */
   const modal = $('#checkout');
+  const form = $('#checkout-form');
+  const accountsOn = () => !!(typeof Backend !== 'undefined' && Backend.enabled);
+
   $('#checkout-btn').addEventListener('click', () => {
     close();
     $('#checkout-total').textContent = money(total());
-    $('#checkout-form').hidden = false;
+    form.hidden = false;
     $('#checkout-done').hidden = true;
+    const user = accountsOn() ? Backend.user : null;
+    const next = encodeURIComponent(location.pathname.split('/').pop() || 'index.html');
+    const notice = form.querySelector('.notice');
+    if (user) {
+      notice.textContent = 'Demo store: no payment is taken. This order will be saved to your account.';
+      if (!form.elements.name.value) form.elements.name.value = Backend.displayName(user);
+      form.elements.email.value = user.email;
+    } else if (accountsOn()) {
+      notice.innerHTML = `Demo store: no payment is taken. <a class="link" href="account.html?next=${next}">Sign in</a> to save this order to your account.`;
+    } else {
+      notice.textContent = 'Demo store: no payment is taken and no data leaves your browser.';
+    }
     Modal.open(modal);
   });
 
-  $('#checkout-form').addEventListener('submit', e => {
+  form.addEventListener('submit', async e => {
     e.preventDefault();
-    const name = new FormData(e.target).get('name') || 'friend';
-    $('#order-name').textContent = String(name).split(' ')[0];
-    $('#order-id').textContent = '#ST' + Math.floor(100000 + Math.random() * 900000);
-    e.target.hidden = true;
+    const fd = new FormData(form);
+    const name = String(fd.get('name') || 'friend');
+    const submit = form.querySelector('[type=submit]');
+    let orderId = 'ST' + Math.floor(100000 + Math.random() * 900000);
+    let saved = false;
+
+    if (accountsOn() && Backend.user) {
+      submit.disabled = true;
+      submit.textContent = 'Placing order…';
+      try {
+        const id = await Backend.createOrder({
+          // product art and photos stay out of the database
+          items: items.map(({ id, name, price, size, qty, custom }) => ({ id, name, price, size, qty, custom: !!custom })),
+          total: total(),
+          shipping: { name, address: String(fd.get('address') || '') }
+        });
+        orderId = 'ST' + String(id).padStart(6, '0');
+        saved = true;
+      } catch (err) {
+        toast('Could not save the order: ' + err.message);
+        return;
+      } finally {
+        submit.disabled = false;
+        submit.textContent = 'Place demo order';
+      }
+    }
+
+    $('#order-name').textContent = name.split(' ')[0];
+    $('#order-id').textContent = '#' + orderId;
+    $('#order-saved').hidden = !saved;
+    form.hidden = true;
     $('#checkout-done').hidden = false;
     items = []; save(); render();
-    e.target.reset();
+    form.reset();
   });
 
   render();

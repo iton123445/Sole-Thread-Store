@@ -64,6 +64,15 @@ const Site = (() => {
     });
   }
 
+  /* ---------- Account link (only when accounts are set up) ---------- */
+  const account = $('#account-link');
+  if (account && (typeof Backend !== 'undefined' && Backend.enabled)) {
+    const update = user => { account.textContent = user ? 'Account' : 'Sign in'; };
+    account.hidden = false;
+    Backend.ready.then(update);
+    Backend.onAuth(update);
+  }
+
   const year = $('#year');
   if (year) year.textContent = new Date().getFullYear();
 
